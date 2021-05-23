@@ -1,6 +1,30 @@
 # BPF-scope (name to be determined)
 
-## Set-up notes
+## Repository overview
+
+```
+.
+├── libbpf => submodule at https://github.com/libbpf/libbpf
+├── LICENSE
+├── README.md
+├── src
+│   ├── <program>.bpf.c
+│   ├── <program>.c
+│   ├── <program>.h
+│   ├── Makefile
+│   └── vmlinux.h
+└── tools
+    └── bpftool
+```
+
+Notes:
+
+`vmlinux.h` can be generated using [this script](https://github.com/libbpf/libbpf-bootstrap/blob/master/tools/gen_vmlinux_h.sh) from [libbpf-bootstrap](https://github.com/libbpf/libbpf-bootstrap).
+
+`bpftool` should be available from an appropriate package in your Linux distribution. E.g. [Arch](https://archlinux.org/packages/community/x86_64/bpf/)
+
+
+## Benchmarking
 ### Install wrk2 benchmarker
 
 ```
