@@ -14,6 +14,6 @@ int tcp_config(struct bpf_sock_ops *skops)
 	family = skops->family;
 	op = skops->op;
 
-	bpf_printk("<<< op %d, port = %d --> %d\n", op, skops->local_port, skops->remote_port);
+	bpf_printk("SOCK OP %d, port = %d --> %d\n", op, skops->local_port, skops->remote_port);
 	return 0;
 }
