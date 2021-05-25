@@ -1,15 +1,19 @@
 // SPDX-License-Identifier: GPL-2.0
-#include "vmlinux.h"
+#include <linux/bpf.h>
+#include <sys/socket.h>
 #include <bpf/bpf_helpers.h>
+#include <bpf/bpf_endian.h>
 
 char LICENSE[] SEC("license") = "GPL";
 
 SEC("sockops")
-int config_tcp(struct bpf_sock_ops *skops)
+int tcp_config(struct bpf_sock_ops *skops)
 {
-	int op;
+	__u32 family, op;
 
-	op = (int) skops->op;
-	bpf_printk("BPF command: %d\n", op);
+	family = skops->family;
+	op = skops->op;
+
+	bpf_printk("<<< op %d, port = %d --> %d\n", op, skops->local_port, skops->remote_port);
 	return 0;
 }
