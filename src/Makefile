@@ -80,6 +80,8 @@ $(OUTPUT)/%.o: %.c $(wildcard %.h) | $(OUTPUT)
 $(APPS): %: $(OUTPUT)/%.o $(LIBBPF_OBJ) | $(OUTPUT)
 	$(call msg,BINARY,$@)
 	$(Q)$(CC) $(CFLAGS) $^ -lelf -lz -o $@
+	$(call msg,CC,$@.o)
+	$(Q)$(CLANG) -g -O2 -Wall $(INCLUDES) -target bpf -c $@.bpf.c -o $@.o
 
 # delete failed targets
 .DELETE_ON_ERROR:
