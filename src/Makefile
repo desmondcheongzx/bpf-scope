@@ -82,6 +82,8 @@ $(APPS): %: $(OUTPUT)/%.o $(LIBBPF_OBJ) | $(OUTPUT)
 	$(Q)$(CC) $(CFLAGS) $^ -lelf -lz -o $@
 	$(call msg,CC,$@.o)
 	$(Q)$(CLANG) -g -O2 -Wall $(INCLUDES) -target bpf -c $@.bpf.c -o $@.o
+	$(call msg,CC,read_params.o)
+	$(Q)$(CLANG) -g -O2 -Wall $(INCLUDES) read_params.c -o read_params.o
 
 # delete failed targets
 .DELETE_ON_ERROR:
