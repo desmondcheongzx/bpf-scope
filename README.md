@@ -23,6 +23,15 @@ Notes:
 
 `bpftool` should be available from an appropriate package in your Linux distribution. E.g. [Arch](https://archlinux.org/packages/community/x86_64/bpf/)
 
+## Usage
+
+To attach the TCP-BPF program, run `tools/load.sh tcp`. To detach it, run `tools/unload.sh tcp`. The bpf program's debugging output is sent to `/sys/kernel/debug/tracing/trace_pipe`.
+
+## BPF programming
+
+### TCP-BPF
+
+Notes on when socket operations trigger BPF programs can be found under `include/uapi/linux/bpf.h` in the kernel tree, or [here](docs/SOCKOPS.md).
 
 ## Benchmarking
 ### Install wrk2 benchmarker
