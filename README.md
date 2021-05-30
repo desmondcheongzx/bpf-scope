@@ -19,7 +19,7 @@
 
 Notes:
 
-`socket_helpers.h` contains some missing `#define` macros in `vmlinux.h`. Currently this contains the macros from `include/uapi/asm-generic/socket.h` in the kernel tree.
+`socket_helpers.h` contains some missing `#define` macros in `vmlinux.h`. Currently this contains the macros from `include/uapi/asm-generic/socket.h` in the kernel tree such as for `SOL_SOCKET`, `SO_SNDBUF` etc.
 
 `vmlinux.h` can be generated using [this script](https://github.com/libbpf/libbpf-bootstrap/blob/master/tools/gen_vmlinux_h.sh) from [libbpf-bootstrap](https://github.com/libbpf/libbpf-bootstrap):
 
@@ -31,9 +31,9 @@ bpftool btf dump file /sys/kernel/btf/vmlinux format c > vmlinux.h
 
 ## Usage
 
-To recompile the TCP-BPF program, run `make tcp` inside the `src/` directory. A `tcp.o` ELF object file should be generated.
+To recompile the TCP-BPF program, run `make tcp` inside the `src/` directory. A `tcp` binary should be generated.
 
-To attach the TCP-BPF program, run `tools/load.sh tcp` from the project's root directory. To detach it, run `tools/unload.sh tcp`. The bpf program's debugging output is sent to `/sys/kernel/debug/tracing/trace_pipe`.
+To attach the TCP-BPF program, run `tools/load.sh config_tcp` (this is the name of the BPF program in `src/tcp.bpf.c`). To detach it, run `tools/unload.sh config_tcp`. The bpf program's debugging output is sent to `/sys/kernel/debug/tracing/trace_pipe`.
 
 ## BPF programming
 
