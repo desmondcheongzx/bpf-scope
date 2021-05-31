@@ -2,6 +2,17 @@
 #include "vmlinux.h"
 #include "socket_helpers.h"
 #include <bpf/bpf_helpers.h>
+#include <bpf/bpf_endian.h>
+#include "tcp.h"
+
+int table_size;
+
+struct bpf_map_def SEC("maps") config_map = {
+        .type = BPF_MAP_TYPE_ARRAY,
+        .key_size = sizeof(int),
+        .value_size = sizeof(struct config),
+        .max_entries = MAX_TABLE_SIZE,
+};
 
 SEC("sockops")
 int config_tcp(struct bpf_sock_ops *skops)
@@ -12,9 +23,43 @@ int config_tcp(struct bpf_sock_ops *skops)
 	int bufsize = 1500000;
 	int rwnd_init = 40;
 	int iw = 40;
+	int i, j;
+	int key;
+	unsigned int masks[33];
 
-	// Compute TCP parameters based on connection properties
+#pragma unroll
+	for (i = 0; i <= 32; i++)
+		masks[i] = 0;
+#pragma unroll
+	for (i = 1; i <= 32; i++) {
+#pragma unroll
+		for (j = i; j <= 32; j++) {
+			masks[j] <<= 1;
+			masks[j] += 1;
+		}
+	}
 
+	// Compute TCP parameters based on connection properties:
+	// go down the list from the most specific rule to the
+	// least specific rule
+#pragma unroll
+	for (i = 0; i < MAX_TABLE_SIZE; i++) {
+		if (i > table_size)
+			break;
+		key = i;
+		struct config *cur = bpf_map_lookup_elem(&config_map, &key);
+		if (!cur)
+			break;
+		int mask = cur->nbits;
+		if ((bpf_ntohl(skops->local_ip4) & mask)
+			== (bpf_ntohl(cur->addr) & mask)) {
+			rwnd_init = cur->rwnd_init;
+			iw = cur->iw;
+			bufsize = cur->bufsize;
+			clamp = cur->clamp;
+			break;
+		}
+	}
 	// Apply TCP parameters
 	op = (int) skops->op;
 	switch (op) {
