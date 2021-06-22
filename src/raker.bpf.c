@@ -32,6 +32,7 @@ static void parse_ipv4(void *data, u64 nh_off, void *data_end)
 	int check = iph->check;
 	if (ver == 4) {
 		iph->check = 0;
+		ipv4_csum(iph, sizeof(struct iphdr), &csum); // Compute checksum twice
 		ipv4_csum(iph, sizeof(struct iphdr), &csum);
 		check = csum;
 		iph->check = csum;
