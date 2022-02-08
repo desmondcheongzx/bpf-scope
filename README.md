@@ -29,6 +29,10 @@ bpftool btf dump file /sys/kernel/btf/vmlinux format c > vmlinux.h
 
 `bpftool` should be available from an appropriate package in your Linux distribution. E.g. [Arch](https://archlinux.org/packages/community/x86_64/bpf/)
 
+## Requirements
+
+To use BPF CO-RE and kernel BTF support, the Linux kernel needs to be built with `CONFIG_DEBUG_INFO_BTF=y`. Refer to [libbpf](https://github.com/libbpf/libbpf#bpf-co-re-compile-once--run-everywhere) to check if your Linux distro already does this.
+
 ## Usage
 
 To recompile the TCP-BPF program, run `make tcp` inside the `src/` directory. A `tcp` binary should be generated.
